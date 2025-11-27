@@ -68,8 +68,11 @@ static const char *dmenucmd[] = {
 };
 static const char *termcmd[]  = { "st", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
+#include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
+        { MODKEY|ShiftMask,           XK_j,      movestack,        {.i = +1 } },
+        { MODKEY|ShiftMask,           XK_k,      movestack,        {.i = -1 } },
 	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = rofi     } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
