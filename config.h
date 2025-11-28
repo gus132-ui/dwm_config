@@ -83,6 +83,8 @@ static const char *dmenucmd[] = {
        	NULL
 };
 static const char *termcmd[]  = { "st", NULL };
+static const char scratchpadname[] = "scratchpad";
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 #include "movestack.c"
 static Keychord *keychords[] = {
@@ -130,6 +132,9 @@ static Keychord *keychords[] = {
         spawn, SHCMD("proton-mail") }),      
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_a}},
         spawn, SHCMD("proton-authenticator") }), 
+    /* scratchpad: MOD + ` (grave) */
+    &((Keychord){1, {{MODKEY, XK_grave}},
+        togglescratch, {.v = scratchpadcmd} }),
 
     /* layouts */
     &((Keychord){1, {{MODKEY, XK_m}},      setlayout,      {.v = &layouts[2]} }),
