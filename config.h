@@ -1,10 +1,15 @@
 /* See LICENSE file for copyright and license details. */
-
+#define FORCE_VSPLIT 1  /* 1: nrowgrid forces two clients vertical split, 0: auto */
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const unsigned int gappih    = 10;  /* horiz inner gap between windows */
+static const unsigned int gappiv    = 10;  /* vert inner gap between windows */
+static const unsigned int gappoh    = 10;  /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;  /* vert outer gap between windows and screen edge */
+static const int smartgaps          = 0;   /* 1 means no outer gap when there is only one window */
 static const char *fonts[]          = { "Hack Nerd Font:size=10" };
 static const char dmenufont[]       = "Hack Nerd Font:size=10";
 static const char col_bg[]          = "#1d2021";
@@ -40,19 +45,30 @@ static const int refreshrate = 120;  /* refresh rate (per second) for client mov
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+    { "[]=",      tile },                /* first entry is default */
+    { "[M]",      monocle },
+    { "[@]",      spiral },
+    { "[\\]",     dwindle },
+    { "H[]",      deck },
+    { "TTT",      bstack },
+    { "===",      bstackhoriz },
+    { "HHH",      grid },
+    { "###",      nrowgrid },
+    { "---",      horizgrid },
+    { ":::",      gaplessgrid },
+    { "|M|",      centeredmaster },
+    { ">M>",      centeredfloatingmaster },
+    { "><>",      NULL },                /* floating */
+    { NULL,       NULL },
 };
 
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
-
+       &((Keychord){1, {{MODKEY, KEY}},                                        view,           {.ui = 1 << TAG} }), \
+       &((Keychord){1, {{MODKEY|ControlMask, KEY}},                            toggleview,     {.ui = 1 << TAG} }), \
+       &((Keychord){1, {{MODKEY|ShiftMask, KEY}},                              tag,            {.ui = 1 << TAG} }), \
+       &((Keychord){1, {{MODKEY|ControlMask|ShiftMask, KEY}},                  toggletag,      {.ui = 1 << TAG} }),
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
@@ -67,16 +83,22 @@ static const char *dmenucmd[] = {
        	NULL
 };
 static const char *termcmd[]  = { "st", NULL };
-static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
+static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-        { MODKEY|ShiftMask,           XK_j,      movestack,        {.i = +1 } },
-        { MODKEY|ShiftMask,           XK_k,      movestack,        {.i = -1 } },
-	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_d,      spawn,          {.v = rofi     } },
+        { MODKEY,                       XK_Up,     setcfact,       {.f = +0.25} },
+        { MODKEY,                       XK_Down,   setcfact,       {.f = -0.25} },
+        { MODKEY,                       XK_r,      setcfact,       {.f =  0.00} },
+        { MODKEY,                       XK_equal,  incrgaps,       {.i = +1 } },
+        { MODKEY,                       XK_minus,  incrgaps,       {.i = -1 } },
+        { Mod1Mask,                     XK_0,      togglegaps,     {0} },
+        { Mod1Mask|ShiftMask,           XK_0,      defaultgaps,    {0} },
+        { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+        { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
+	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_r,      spawn,          {.v = rofi     } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_s,      spawn,           SHCMD("flameshot gui") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -87,7 +109,12 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_z,      zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_t,      spawn,          {.v = &layouts[0]} },
+	/* Application launchers */
+	{ MODKEY,                       XK_f,      spawn,          SHCMD("firefox") },
+	{ MODKEY,                       XK_t,      spawn,          SHCMD("thunderbird") },
+	{ MODKEY,                       XK_o,      spawn,          SHCMD("obsidian") },
+	{ MODKEY,                       XK_s,      spawn,          SHCMD("flameshot gui") },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
@@ -98,6 +125,17 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ Mod1Mask, XK_1, setlayout, {.v = &layouts[0]} },  /* tile               */
+	{ Mod1Mask, XK_2, setlayout, {.v = &layouts[1]} },  /* monocle            */
+	{ Mod1Mask, XK_3, setlayout, {.v = &layouts[5]} },  /* bstack             */
+	{ Mod1Mask, XK_4, setlayout, {.v = &layouts[8]} },  /* nrowgrid           */
+	{ Mod1Mask, XK_5, setlayout, {.v = &layouts[10]} }, /* gaplessgrid        */
+	{ Mod1Mask, XK_6, setlayout, {.v = &layouts[11]} }, /* centeredmaster     */
+	{ Mod1Mask, XK_7, setlayout, {.v = &layouts[3]} },  /* dwindle            */
+	{ Mod1Mask, XK_8, setlayout, {.v = &layouts[9]} },  /* horizgrid          */
+
+
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
