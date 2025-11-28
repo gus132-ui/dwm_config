@@ -85,67 +85,90 @@ static const char *dmenucmd[] = {
 static const char *termcmd[]  = { "st", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 #include "movestack.c"
-static const Key keys[] = {
-	/* modifier                     key        function        argument */
-        { MODKEY,                       XK_Up,     setcfact,       {.f = +0.25} },
-        { MODKEY,                       XK_Down,   setcfact,       {.f = -0.25} },
-        { MODKEY,                       XK_r,      setcfact,       {.f =  0.00} },
-        { MODKEY,                       XK_equal,  incrgaps,       {.i = +1 } },
-        { MODKEY,                       XK_minus,  incrgaps,       {.i = -1 } },
-        { Mod1Mask,                     XK_0,      togglegaps,     {0} },
-        { Mod1Mask|ShiftMask,           XK_0,      defaultgaps,    {0} },
-        { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
-        { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_r,      spawn,          {.v = rofi     } },
-	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_p,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_z,      zoom,           {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY,                       XK_q,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      spawn,          {.v = &layouts[0]} },
-	/* Application launchers */
-	{ MODKEY,                       XK_f,      spawn,          SHCMD("firefox") },
-	{ MODKEY,                       XK_t,      spawn,          SHCMD("thunderbird") },
-	{ MODKEY,                       XK_o,      spawn,          SHCMD("obsidian") },
-	{ MODKEY,                       XK_s,      spawn,          SHCMD("flameshot gui") },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ Mod1Mask, XK_1, setlayout, {.v = &layouts[0]} },  /* tile               */
-	{ Mod1Mask, XK_2, setlayout, {.v = &layouts[1]} },  /* monocle            */
-	{ Mod1Mask, XK_3, setlayout, {.v = &layouts[5]} },  /* bstack             */
-	{ Mod1Mask, XK_4, setlayout, {.v = &layouts[8]} },  /* nrowgrid           */
-	{ Mod1Mask, XK_5, setlayout, {.v = &layouts[10]} }, /* gaplessgrid        */
-	{ Mod1Mask, XK_6, setlayout, {.v = &layouts[11]} }, /* centeredmaster     */
-	{ Mod1Mask, XK_7, setlayout, {.v = &layouts[3]} },  /* dwindle            */
-	{ Mod1Mask, XK_8, setlayout, {.v = &layouts[9]} },  /* horizgrid          */
+static Keychord *keychords[] = {
+    /* modifier / key / function / argument */
 
+    /* cfacts + gaps */
+    &((Keychord){1, {{MODKEY, XK_Up}},     setcfact,       {.f = +0.25} }),
+    &((Keychord){1, {{MODKEY, XK_Down}},   setcfact,       {.f = -0.25} }),
+    &((Keychord){1, {{MODKEY, XK_r}},      setcfact,       {.f =  0.00} }),
+    &((Keychord){1, {{MODKEY, XK_equal}},  incrgaps,       {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_minus}},  incrgaps,       {.i = -1 } }),
+    &((Keychord){1, {{Mod1Mask, XK_0}},    togglegaps,     {0} }),
+    &((Keychord){1, {{Mod1Mask|ShiftMask, XK_0}}, defaultgaps, {0} }),
 
+    /* movestack */
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_j}}, movestack, {.i = +1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_k}}, movestack, {.i = -1 } }),
 
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+    /* launcher + terminal */
+    &((Keychord){1, {{MODKEY, XK_d}},      spawn,          {.v = dmenucmd } }),
+    &((Keychord){1, {{MODKEY, XK_r}},      spawn,          {.v = rofi     } }),
+    &((Keychord){1, {{MODKEY, XK_Return}}, spawn,          {.v = termcmd } }),
+
+    /* basic wm controls */
+    &((Keychord){1, {{MODKEY, XK_b}},      togglebar,      {0} }),
+    &((Keychord){1, {{MODKEY, XK_j}},      focusstack,     {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_k}},      focusstack,     {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_i}},      incnmaster,     {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_p}},      incnmaster,     {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_h}},      setmfact,       {.f = -0.05} }),
+    &((Keychord){1, {{MODKEY, XK_l}},      setmfact,       {.f = +0.05} }),
+    &((Keychord){1, {{MODKEY, XK_z}},      zoom,           {0} }),
+    &((Keychord){1, {{MODKEY, XK_Tab}},    view,           {0} }),
+    &((Keychord){1, {{MODKEY, XK_q}},      killclient,     {0} }),
+
+    /* application launchers – single key */
+    &((Keychord){1, {{MODKEY, XK_f}},      spawn,          SHCMD("firefox") }),
+    &((Keychord){1, {{MODKEY, XK_t}},      spawn,          SHCMD("thunderbird") }),
+    &((Keychord){1, {{MODKEY, XK_o}},      spawn,          SHCMD("obsidian") }),
+    &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui") }),
+    /* Proton suite chords: MOD + a, then p + letter */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_p}},
+        spawn, SHCMD("proton-pass") }),      
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_m}},
+        spawn, SHCMD("proton-mail") }),      
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_a}},
+        spawn, SHCMD("proton-authenticator") }), 
+
+    /* layouts */
+    &((Keychord){1, {{MODKEY, XK_m}},      setlayout,      {.v = &layouts[2]} }),
+    &((Keychord){1, {{MODKEY, XK_space}},  setlayout,      {0} }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_space}}, togglefloating, {0} }),
+
+    /* view/tag all */
+    &((Keychord){1, {{MODKEY, XK_0}},      view,           {.ui = ~0 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_0}}, tag,       {.ui = ~0 } }),
+
+    /* monitors */
+    &((Keychord){1, {{MODKEY, XK_comma}},  focusmon,       {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_period}}, focusmon,       {.i = +1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_comma}}, tagmon, {.i = -1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_period}}, tagmon, {.i = +1 } }),
+
+    /* layouts on Alt+1..8 */
+    &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
+    &((Keychord){1, {{Mod1Mask, XK_2}},    setlayout,      {.v = &layouts[1]} }),  /* monocle     */
+    &((Keychord){1, {{Mod1Mask, XK_3}},    setlayout,      {.v = &layouts[5]} }),  /* bstack      */
+    &((Keychord){1, {{Mod1Mask, XK_4}},    setlayout,      {.v = &layouts[8]} }),  /* nrowgrid    */
+    &((Keychord){1, {{Mod1Mask, XK_5}},    setlayout,      {.v = &layouts[10]} }), /* gaplessgrid */
+    &((Keychord){1, {{Mod1Mask, XK_6}},    setlayout,      {.v = &layouts[11]} }), /* centeredmaster */
+    &((Keychord){1, {{Mod1Mask, XK_7}},    setlayout,      {.v = &layouts[3]} }),  /* dwindle     */
+    &((Keychord){1, {{Mod1Mask, XK_8}},    setlayout,      {.v = &layouts[9]} }),  /* horizgrid   */
+
+    /* tags (from TAGKEYS macro – already keychord-aware) */
+    TAGKEYS( XK_1, 0)
+    TAGKEYS( XK_2, 1)
+    TAGKEYS( XK_3, 2)
+    TAGKEYS( XK_4, 3)
+    TAGKEYS( XK_5, 4)
+    TAGKEYS( XK_6, 5)
+    TAGKEYS( XK_7, 6)
+    TAGKEYS( XK_8, 7)
+    TAGKEYS( XK_9, 8)
+
+    /* quit */
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_q}}, quit, {0} }),
 };
 
 /* button definitions */
