@@ -31,9 +31,9 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class        instance  title      tags mask     isfloating   monitor */
+	{ "firefox-esr",   NULL,  NULL,       1 << 0,       0,           -1 },
+	{ "Protonvpn-app", NULL,  NULL,       1 << 8,       1,            1 },
 };
 
 /* layout(s) */
@@ -135,6 +135,9 @@ static Keychord *keychords[] = {
     /* scratchpad: MOD + ` (grave) */
     &((Keychord){1, {{MODKEY, XK_grave}},
         togglescratch, {.v = scratchpadcmd} }),
+
+    /* sticky: mod + a + s */
+    &((Keychord){ 2, {{ MODKEY, XK_a }, { 0, XK_s }}, togglesticky, {0} }),
 
     /* layouts */
     &((Keychord){1, {{MODKEY, XK_m}},      setlayout,      {.v = &layouts[2]} }),
