@@ -124,7 +124,7 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY, XK_f}},      spawn,          SHCMD("firefox") }),
     &((Keychord){1, {{MODKEY, XK_t}},      spawn,          SHCMD("thunderbird") }),
     &((Keychord){1, {{MODKEY, XK_o}},      spawn,          SHCMD("obsidian") }),
-    &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui") }),
+    &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     /* Proton suite chords: MOD + a, then p + letter */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_p}},
         spawn, SHCMD("proton-pass") }),      
@@ -154,6 +154,28 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY|ShiftMask, XK_comma}}, tagmon, {.i = -1 } }),
     &((Keychord){1, {{MODKEY|ShiftMask, XK_period}}, tagmon, {.i = +1 } }),
 
+    /* Bluetooth Mod + b + c/d */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_c}},
+        spawn, SHCMD("bton.sh") }),
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_d}},
+        spawn, SHCMD("btoff.sh") }),
+
+    /* Volume: Mod + a, v, k/j/m */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_k}},
+        spawn, SHCMD("pamixer -i 10") }),         /* volume up */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_j}},
+        spawn, SHCMD("pamixer -d 10") }),         /* volume down */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_m}},
+        spawn, SHCMD("pamixer -t") }),           /* mute toggle */
+
+    /* Brightness: Mod + a, b, k/j */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_k}},
+        spawn, SHCMD("brightnessctl set +10%") }),   /* brighter */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_j}},
+        spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
+
+
+
     /* layouts on Alt+1..8 */
     &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
     &((Keychord){1, {{Mod1Mask, XK_2}},    setlayout,      {.v = &layouts[1]} }),  /* monocle     */
@@ -177,6 +199,8 @@ static Keychord *keychords[] = {
 
     /* quit */
     &((Keychord){1, {{MODKEY|ShiftMask, XK_q}}, quit, {0} }),
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_l}, {0, XK_o}},
+    spawn, SHCMD("slock & xset dpms force off") }),
 };
 
 /* button definitions */
