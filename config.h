@@ -121,9 +121,38 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY, XK_q}},      killclient,     {0} }),
 
     /* application launchers – single key */
-    &((Keychord){1, {{MODKEY, XK_f}},      spawn,          SHCMD("firefox") }),
-    &((Keychord){1, {{MODKEY, XK_t}},      spawn,          SHCMD("thunderbird") }),
-    &((Keychord){1, {{MODKEY, XK_o}},      spawn,          SHCMD("obsidian") }),
+    /* application launchers */
+
+    /* Mod + a + f + f → Firefox ESR (normal) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_f}},
+    spawn, SHCMD("firefox-esr")
+}),
+
+    /* Mod + a + f + j → Firefox ESR (firejail, persistent) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_j}},
+    spawn, SHCMD("firejail firefox-esr")
+}),
+
+    /* Mod + a + m + v → Mullvad (set correct binary name) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_m}, {0, XK_v}},
+    spawn, SHCMD("mullvad-browser")
+}),
+
+    /* Mod + a + k + p → KeePassXC */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_k}, {0, XK_p}},
+    spawn, SHCMD("keepassxc")
+}),
+
+    /* Mod + a + t → Thunderbird */
+    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_t}},
+    spawn, SHCMD("thunderbird")
+}),
+
+    /* Mod + a + o → Obsidian */
+    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_o}},
+    spawn, SHCMD("obsidian")
+}),
+
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     /* Proton suite chords: MOD + a, then p + letter */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_p}},
