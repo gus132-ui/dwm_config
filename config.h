@@ -32,7 +32,7 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class        instance  title      tags mask     isfloating   monitor */
-	{ "firefox-esr",   NULL,  NULL,       1 << 0,       0,           -1 },
+	{ "firefox",   NULL,  NULL,       1 << 0,       0,           -1 },
 	{ "Protonvpn-app", NULL,  NULL,       1 << 8,       1,            1 },
 };
 
@@ -82,10 +82,12 @@ static const char *dmenucmd[] = {
        	"-sf", col_fg,
        	NULL
 };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
+static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
+
 #include "movestack.c"
 static Keychord *keychords[] = {
     /* modifier / key / function / argument */
@@ -107,9 +109,9 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY, XK_d}},      spawn,          {.v = dmenucmd } }),
     &((Keychord){1, {{MODKEY, XK_r}},      spawn,          {.v = rofi     } }),
     &((Keychord){1, {{MODKEY, XK_Return}}, spawn,          {.v = termcmd } }),
+    &((Keychord){3, {{MODKEY, XK_c}, {0, XK_w}, {0, XK_w}}, spawn, {.v = vimwikicmd}}),
 
     /* basic wm controls */
-    &((Keychord){1, {{MODKEY, XK_b}},      togglebar,      {0} }),
     &((Keychord){1, {{MODKEY, XK_j}},      focusstack,     {.i = +1 } }),
     &((Keychord){1, {{MODKEY, XK_k}},      focusstack,     {.i = -1 } }),
     &((Keychord){1, {{MODKEY, XK_i}},      incnmaster,     {.i = +1 } }),
@@ -123,31 +125,35 @@ static Keychord *keychords[] = {
     /* application launchers – single key */
     /* application launchers */
 
-    /* Mod + a + f + f → Firefox ESR (normal) */
-    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_f}}, 
-    spawn, SHCMD("firefox-esr")
+    /* Mod + a + f + f → Firefox ESR (with firejail) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_f}}, 
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/firefox >/dev/null 2>&1 &")
+}),
+    /* Mod + a + f + r → Firefox (without firejail) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_r}}, 
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/firefox-raw >/dev/null 2>&1 &")
+}),
+    /* Mod + c + f + f -> Reset ChatGPT (reset-gpt) */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_f}, {0, XK_f}},
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/reset-gpt >/dev/null 2>&1 &")
 }),
     /* Mod + a + m + v → Mullvad (set correct binary name) */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_m}, {0, XK_v}},
-    spawn, SHCMD("mullvad-browser")
-}),
-    /* Mod + a + k + p → KeePassXC */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_k}, {0, XK_p}},
-    spawn, SHCMD("keepassxc")
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_m}, {0, XK_m}},
+    spawn, SHCMD("setsid mullvad-browser >/dev/null 2>&1 &")
 }),
     /* Mod + a + t → Thunderbird */
     &((Keychord){2, {{MODKEY, XK_a}, {0, XK_t}},
-    spawn, SHCMD("thunderbird")
+    spawn, SHCMD("setsid thunderbird >/dev/null 2>&1 &")
 }),
     /* Mod + a + o → Obsidian */
     &((Keychord){2, {{MODKEY, XK_a}, {0, XK_o}},
-    spawn, SHCMD("obsidian")
+    spawn, SHCMD("setsid obsidian >/dev/null 2>&1 &")
 }),
 
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     /* Proton suite chords: MOD + a, then p + letter */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_m}},
-        spawn, SHCMD("proton-mail") }),      
+        spawn, SHCMD("setsid proton-mail >/dev/null 2&1 &") }),      
     /* scratchpad: MOD + ` (grave) */
     &((Keychord){1, {{MODKEY, XK_grave}},
         togglescratch, {.v = scratchpadcmd} }),
@@ -170,11 +176,6 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY|ShiftMask, XK_comma}}, tagmon, {.i = -1 } }),
     &((Keychord){1, {{MODKEY|ShiftMask, XK_period}}, tagmon, {.i = +1 } }),
 
-    /* Bluetooth Mod + b + c/d */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_c}},
-        spawn, SHCMD("bton.sh") }),
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_d}},
-        spawn, SHCMD("btoff.sh") }),
 
     /* Volume: Mod + a, v, k/j/m */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_k}},
@@ -190,8 +191,35 @@ static Keychord *keychords[] = {
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_j}},
         spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
 
+/* Mod + c + r + v -> rofi vim power */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_v}},
+    spawn, SHCMD("rofi-vim-power")
+}),
+/* Mod + c + r + v -> rofi notmuch */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_n}},
+    spawn, SHCMD("rofi-notmuch")
+}),
 
+/* Mod + c + q + q -> shutdown */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_q}, {0, XK_q}},
+    spawn, SHCMD("systemctl poweroff")
+}),
 
+/* Mod + c + p + p -> passmenu */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_p}, {0, XK_p}},
+  spawn, SHCMD("passmenu")
+}),
+	/* Mod + c + p + o -> passmenu-otp */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_o}, {0, XK_o}},
+  spawn, SHCMD("passmenu-otp")
+}),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_b }},
+    spawn, SHCMD("setsid typebookmarks >/dev/null 2>&1 &") }),
+
+/* bookmarks: MOD + c, then Shift+b (add/bookmark) */
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_b }},
+    spawn, SHCMD("setsid bookmarkthis >/dev/null 2>&1 &") }),
     /* layouts on Alt+1..8 */
     &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
     &((Keychord){1, {{Mod1Mask, XK_2}},    setlayout,      {.v = &layouts[1]} }),  /* monocle     */
@@ -216,7 +244,7 @@ static Keychord *keychords[] = {
     /* quit */
     &((Keychord){1, {{MODKEY|ShiftMask, XK_q}}, quit, {0} }),
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_l}, {0, XK_o}},
-    spawn, SHCMD("slock & xset dpms force off") }),
+    spawn, SHCMD("slock &") }),
 };
 
 /* button definitions */
