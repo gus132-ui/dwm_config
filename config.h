@@ -87,6 +87,8 @@ static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
+static const char *notes_cmd[] = { "st", "-e", "vim", "/home/lukasz/.notes", NULL };
+static const char *clips_cmd[] = { "st", "-e", "vim", "/home/lukasz/.clips", NULL };
 
 #include "movestack.c"
 static Keychord *keychords[] = {
@@ -200,6 +202,10 @@ static Keychord *keychords[] = {
     spawn, SHCMD("rofi-notmuch")
 }),
 
+/* Mod + c + r + v -> rofi notmuch */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_t}},
+    spawn, SHCMD("rofi-task-names")
+}),
 /* Mod + c + q + q -> shutdown */
 &((Keychord){3, {{MODKEY, XK_c}, {0, XK_q}, {0, XK_q}},
     spawn, SHCMD("systemctl poweroff")
@@ -213,6 +219,27 @@ static Keychord *keychords[] = {
 &((Keychord){3, {{MODKEY, XK_c}, {0, XK_o}, {0, XK_o}},
   spawn, SHCMD("passmenu-otp")
 }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_k }},
+    spawn, SHCMD("setsid citekey-menu >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_s }},
+    spawn, SHCMD("setsid dmenu-scripts >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_c }},
+    spawn, SHCMD("setsid dmenu-edit-config >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_n }},
+    spawn, SHCMD("setsid capture-clip >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_n }},
+    spawn, SHCMD("setsid st -e vim ~/.clips >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_m }},
+    spawn, SHCMD("setsid dmenu-memo >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_m }},
+    spawn, SHCMD("setsid st -e vim ~/.notes  >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_v }},
+    spawn, SHCMD("setsid dmenu-vimwiki-open >/dev/null 2>&1 &") }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_b }},
     spawn, SHCMD("setsid typebookmarks >/dev/null 2>&1 &") }),
