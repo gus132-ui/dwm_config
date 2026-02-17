@@ -33,7 +33,7 @@ static const Rule rules[] = {
 	 */
 	/* class        instance  title      tags mask     isfloating   monitor */
 	{ "firefox",   NULL,  NULL,       1 << 0,       0,           -1 },
-	{ "Protonvpn-app", NULL,  NULL,       1 << 8,       1,            1 },
+	{ "protonvpn-app", NULL,  NULL,       1 << 8,       1,            -1 },
 };
 
 /* layout(s) */
@@ -89,6 +89,7 @@ static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.c
 static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
 static const char *notes_cmd[] = { "st", "-e", "vim", "/home/lukasz/.notes", NULL };
 static const char *clips_cmd[] = { "st", "-e", "vim", "/home/lukasz/.clips", NULL };
+static const char *pulsemixercmd[] = { "st", "-e", "pulsemixer", NULL };
 
 #include "movestack.c"
 static Keychord *keychords[] = {
@@ -153,6 +154,7 @@ static Keychord *keychords[] = {
 }),
 
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
+    &((Keychord){1, {{Mod1Mask, XK_s}}, spawn, SHCMD("flameshot gui") }),
     /* Proton suite chords: MOD + a, then p + letter */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_m}},
         spawn, SHCMD("setsid proton-mail >/dev/null 2&1 &") }),      
@@ -179,18 +181,17 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY|ShiftMask, XK_period}}, tagmon, {.i = +1 } }),
 
 
-    /* Volume: Mod + a, v, k/j/m */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_k}},
-        spawn, SHCMD("pamixer -i 10") }),         /* volume up */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_j}},
-        spawn, SHCMD("pamixer -d 10") }),         /* volume down */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_v}, {0, XK_m}},
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_m}},
         spawn, SHCMD("pamixer -t") }),           /* mute toggle */
-
-    /* Brightness: Mod + a, b, k/j */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_k}},
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_j}},
+        spawn, SHCMD("pamixer -d 10") }),           
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_k}},
+        spawn, SHCMD("pamixer -i 10") }),           
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_p}},
+        spawn, SHCMD("st -e pulsemixer") }),         /* pulsemixer */
+    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_k}, {0, XK_k}},
         spawn, SHCMD("brightnessctl set +10%") }),   /* brighter */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_b}, {0, XK_j}},
+    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_j}, {0, XK_j}},
         spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
 
 /* Mod + c + r + v -> rofi vim power */
@@ -207,7 +208,7 @@ static Keychord *keychords[] = {
     spawn, SHCMD("rofi-task-names")
 }),
 /* Mod + c + q + q -> shutdown */
-&((Keychord){3, {{MODKEY, XK_c}, {0, XK_q}, {0, XK_q}},
+&((Keychord){3, {{MODKEY, XK_c}, { ShiftMask, XK_q }, { ShiftMask, XK_q }},
     spawn, SHCMD("systemctl poweroff")
 }),
 
@@ -222,9 +223,6 @@ static Keychord *keychords[] = {
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_k }},
     spawn, SHCMD("setsid citekey-menu >/dev/null 2>&1 &") }),
-
-&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_s }},
-    spawn, SHCMD("setsid dmenu-scripts >/dev/null 2>&1 &") }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_c }},
     spawn, SHCMD("setsid dmenu-edit-config >/dev/null 2>&1 &") }),
