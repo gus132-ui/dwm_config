@@ -147,7 +147,7 @@ static Keychord *keychords[] = {
     /* Mod + a + t → Thunderbird */
     &((Keychord){2, {{MODKEY, XK_a}, {0, XK_t}},
     spawn, SHCMD("setsid thunderbird >/dev/null 2>&1 &")
-}),
+
     /* Mod + a + o → Obsidian */
     &((Keychord){2, {{MODKEY, XK_a}, {0, XK_o}},
     spawn, SHCMD("setsid obsidian >/dev/null 2>&1 &")
@@ -189,6 +189,8 @@ static Keychord *keychords[] = {
         spawn, SHCMD("pamixer -i 10") }),           
     &((Keychord){2, {{MODKEY, XK_v}, {0, XK_p}},
         spawn, SHCMD("st -e pulsemixer") }),         /* pulsemixer */
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_t}},
+        spawn, SHCMD("media-toggle") }),           
     &((Keychord){3, {{MODKEY, XK_b}, {0, XK_k}, {0, XK_k}},
         spawn, SHCMD("brightnessctl set +10%") }),   /* brighter */
     &((Keychord){3, {{MODKEY, XK_b}, {0, XK_j}, {0, XK_j}},
