@@ -71,15 +71,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bg, "-nf", col_fg, "-sb", col_accent, "-sf", col_bg, NULL };
 static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
-static const char *notes_cmd[] = { "st", "-e", "vim", "/home/lukasz/.notes", NULL };
-static const char *clips_cmd[] = { "st", "-e", "vim", "/home/lukasz/.clips", NULL };
-static const char *pulsemixercmd[] = { "st", "-e", "pulsemixer", NULL };
 
 static Keychord *keychords[] = {
     /* modifier / key / function / argument */
