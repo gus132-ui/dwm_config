@@ -60,7 +60,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	&((Keychord){1, {{MODKEY, KEY}},                         view,       {.ui = 1 << TAG} }), \
 	&((Keychord){1, {{MODKEY|ControlMask, KEY}},             toggleview, {.ui = 1 << TAG} }), \
@@ -73,7 +73,15 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
+static const char scratchpadname[] = "scratchpad";
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
+static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
+static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
+static const char *notes_cmd[] = { "st", "-e", "vim", "/home/lukasz/.notes", NULL };
+static const char *clips_cmd[] = { "st", "-e", "vim", "/home/lukasz/.clips", NULL };
+static const char *pulsemixercmd[] = { "st", "-e", "pulsemixer", NULL };
+
 
 static Keychord *keychords[] = {
 	&((Keychord){1, {{MODKEY, XK_p}},                                       spawn,          {.v = dmenucmd } }),
@@ -90,22 +98,22 @@ static Keychord *keychords[] = {
 	&((Keychord){1, {{MODKEY|ShiftMask, XK_l}},                             setcfact,       {.f = -0.25} }),
 	&((Keychord){1, {{MODKEY|ShiftMask, XK_o}},                             setcfact,       {.f =  0.00} }),
 	&((Keychord){1, {{MODKEY, XK_Return}},                                  zoom,           {0} }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_u}},                              incrgaps,       {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_u}},                    incrgaps,       {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_i}},                              incrigaps,      {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_i}},                    incrigaps,      {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_o}},                              incrogaps,      {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_o}},                    incrogaps,      {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_6}},                              incrihgaps,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_6}},                    incrihgaps,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_7}},                              incrivgaps,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_7}},                    incrivgaps,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_8}},                              incrohgaps,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_8}},                    incrohgaps,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_9}},                              incrovgaps,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_9}},                    incrovgaps,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|Mod4Mask, XK_0}},                              togglegaps,     {0} }),
-	&((Keychord){1, {{MODKEY|Mod4Mask|ShiftMask, XK_0}},                    defaultgaps,    {0} }),
+	&((Keychord){1, {{MODKEY, XK_u}},                                        incrgaps,       {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_u}},                              incrgaps,       {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_i}},                                        incrigaps,      {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_i}},                              incrigaps,      {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_o}},                                        incrogaps,      {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_o}},                              incrogaps,      {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_6}},                                        incrihgaps,     {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_6}},                              incrihgaps,     {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_7}},                                        incrivgaps,     {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_7}},                              incrivgaps,     {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_8}},                                        incrohgaps,     {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_8}},                              incrohgaps,     {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_9}},                                        incrovgaps,     {.i = +1 } }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_9}},                              incrovgaps,     {.i = -1 } }),
+        &((Keychord){1, {{MODKEY, XK_0}},                                        togglegaps,     {0} }),
+        &((Keychord){1, {{MODKEY|ShiftMask, XK_0}},                              defaultgaps,    {0} }),
 	&((Keychord){1, {{MODKEY, XK_Tab}},                                     view,           {0} }),
 	&((Keychord){1, {{MODKEY|ShiftMask, XK_c}},                             killclient,     {0} }),
 	&((Keychord){1, {{MODKEY, XK_t}},                                       setlayout,      {.v = &layouts[0]} }),
@@ -130,6 +138,9 @@ static Keychord *keychords[] = {
 	TAGKEYS( XK_9, 8)
 	&((Keychord){1, {{MODKEY|ShiftMask, XK_q}},                             quit,           {0} }),
 	&((Keychord){1, {{MODKEY, XK_s}},                                       togglesticky,   {0} }),
+	&((Keychord){1, {{MODKEY, XK_r}},                              spawn,          {.v = rofi } }),
+	&((Keychord){3, {{MODKEY, XK_c}, {0, XK_w}, {0, XK_w}},       spawn,          {.v = vimwikicmd } }),
+	&((Keychord){1, {{MODKEY, XK_grave}},                          togglescratch,  {.v = scratchpadcmd } }),
 };
 
 /* button definitions */
