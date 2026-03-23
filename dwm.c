@@ -299,9 +299,10 @@ static       int smartgaps       = 0;
 #define FORCE_VSPLIT 1
 /* configuration, allows nested code to access above variables */
 #include "vanitygaps.c"
+#include "movestack.c"
 #include "config.h"
-
 static unsigned int scratchtag = 1 << LENGTH(tags);
+
 
 struct Pertag {
 	unsigned int curtag, prevtag; /* current and previous tag */

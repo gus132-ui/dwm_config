@@ -82,65 +82,186 @@ static const char *notes_cmd[] = { "st", "-e", "vim", "/home/lukasz/.notes", NUL
 static const char *clips_cmd[] = { "st", "-e", "vim", "/home/lukasz/.clips", NULL };
 static const char *pulsemixercmd[] = { "st", "-e", "pulsemixer", NULL };
 
-
 static Keychord *keychords[] = {
-	&((Keychord){1, {{MODKEY, XK_p}},                                       spawn,          {.v = dmenucmd } }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_Return}},                        spawn,          {.v = termcmd } }),
-	&((Keychord){2, {{MODKEY, XK_e}, {MODKEY, XK_e}},                       spawn,          {.v = termcmd } }),
-	&((Keychord){1, {{MODKEY, XK_b}},                                       togglebar,      {0} }),
-	&((Keychord){1, {{MODKEY, XK_j}},                                       focusstack,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY, XK_k}},                                       focusstack,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY, XK_i}},                                       incnmaster,     {.i = +1 } }),
-	&((Keychord){1, {{MODKEY, XK_d}},                                       incnmaster,     {.i = -1 } }),
-	&((Keychord){1, {{MODKEY, XK_h}},                                       setmfact,       {.f = -0.05} }),
-	&((Keychord){1, {{MODKEY, XK_l}},                                       setmfact,       {.f = +0.05} }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_h}},                             setcfact,       {.f = +0.25} }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_l}},                             setcfact,       {.f = -0.25} }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_o}},                             setcfact,       {.f =  0.00} }),
-	&((Keychord){1, {{MODKEY, XK_Return}},                                  zoom,           {0} }),
-	&((Keychord){1, {{MODKEY, XK_u}},                                        incrgaps,       {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_u}},                              incrgaps,       {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_i}},                                        incrigaps,      {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_i}},                              incrigaps,      {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_o}},                                        incrogaps,      {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_o}},                              incrogaps,      {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_6}},                                        incrihgaps,     {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_6}},                              incrihgaps,     {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_7}},                                        incrivgaps,     {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_7}},                              incrivgaps,     {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_8}},                                        incrohgaps,     {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_8}},                              incrohgaps,     {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_9}},                                        incrovgaps,     {.i = +1 } }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_9}},                              incrovgaps,     {.i = -1 } }),
-        &((Keychord){1, {{MODKEY, XK_0}},                                        togglegaps,     {0} }),
-        &((Keychord){1, {{MODKEY|ShiftMask, XK_0}},                              defaultgaps,    {0} }),
-	&((Keychord){1, {{MODKEY, XK_Tab}},                                     view,           {0} }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_c}},                             killclient,     {0} }),
-	&((Keychord){1, {{MODKEY, XK_t}},                                       setlayout,      {.v = &layouts[0]} }),
-	&((Keychord){1, {{MODKEY, XK_f}},                                       setlayout,      {.v = &layouts[1]} }),
-	&((Keychord){1, {{MODKEY, XK_m}},                                       setlayout,      {.v = &layouts[2]} }),
-	&((Keychord){1, {{MODKEY, XK_space}},                                   setlayout,      {0} }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_space}},                         togglefloating, {0} }),
-	&((Keychord){1, {{MODKEY, XK_0}},                                       view,           {.ui = ~0 } }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_0}},                             tag,            {.ui = ~0 } }),
-	&((Keychord){1, {{MODKEY, XK_comma}},                                   focusmon,       {.i = -1 } }),
-	&((Keychord){1, {{MODKEY, XK_period}},                                  focusmon,       {.i = +1 } }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_comma}},                         tagmon,         {.i = -1 } }),
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_period}},                        tagmon,         {.i = +1 } }),
-	TAGKEYS( XK_1, 0)
-	TAGKEYS( XK_2, 1)
-	TAGKEYS( XK_3, 2)
-	TAGKEYS( XK_4, 3)
-	TAGKEYS( XK_5, 4)
-	TAGKEYS( XK_6, 5)
-	TAGKEYS( XK_7, 6)
-	TAGKEYS( XK_8, 7)
-	TAGKEYS( XK_9, 8)
-	&((Keychord){1, {{MODKEY|ShiftMask, XK_q}},                             quit,           {0} }),
-	&((Keychord){1, {{MODKEY, XK_s}},                                       togglesticky,   {0} }),
-	&((Keychord){1, {{MODKEY, XK_r}},                              spawn,          {.v = rofi } }),
-	&((Keychord){3, {{MODKEY, XK_c}, {0, XK_w}, {0, XK_w}},       spawn,          {.v = vimwikicmd } }),
-	&((Keychord){1, {{MODKEY, XK_grave}},                          togglescratch,  {.v = scratchpadcmd } }),
+    /* modifier / key / function / argument */
+
+    /* cfacts + gaps */
+    &((Keychord){1, {{MODKEY, XK_Up}},     setcfact,       {.f = +0.25} }),
+    &((Keychord){1, {{MODKEY, XK_Down}},   setcfact,       {.f = -0.25} }),
+    &((Keychord){1, {{MODKEY, XK_0}},      setcfact,       {.f =  0.00} }),
+    &((Keychord){1, {{MODKEY, XK_equal}},  incrgaps,       {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_minus}},  incrgaps,       {.i = -1 } }),
+    &((Keychord){1, {{Mod1Mask, XK_0}},    togglegaps,     {0} }),
+    &((Keychord){1, {{Mod1Mask|ShiftMask, XK_0}}, defaultgaps, {0} }),
+
+    /* movestack */
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_j}}, movestack, {.i = +1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_k}}, movestack, {.i = -1 } }),
+
+    /* launcher + terminal */
+    &((Keychord){1, {{MODKEY, XK_d}},      spawn,          {.v = dmenucmd } }),
+    &((Keychord){1, {{MODKEY, XK_r}},      spawn,          {.v = rofi     } }),
+    &((Keychord){1, {{MODKEY, XK_Return}}, spawn,          {.v = termcmd } }),
+    &((Keychord){3, {{MODKEY, XK_c}, {0, XK_w}, {0, XK_w}}, spawn, {.v = vimwikicmd}}),
+
+    /* basic wm controls */
+    &((Keychord){1, {{MODKEY, XK_j}},      focusstack,     {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_k}},      focusstack,     {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_i}},      incnmaster,     {.i = +1 } }),
+    &((Keychord){1, {{MODKEY, XK_p}},      incnmaster,     {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_h}},      setmfact,       {.f = -0.05} }),
+    &((Keychord){1, {{MODKEY, XK_l}},      setmfact,       {.f = +0.05} }),
+    &((Keychord){1, {{MODKEY, XK_z}},      zoom,           {0} }),
+    &((Keychord){1, {{MODKEY, XK_Tab}},    view,           {0} }),
+    &((Keychord){1, {{MODKEY, XK_q}},      killclient,     {0} }),
+
+    /* application launchers – single key */
+    /* application launchers */
+
+    /* Mod + a + f + f → Firefox ESR (with firejail) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_f}}, 
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/firefox >/dev/null 2>&1 &")
+}),
+    /* Mod + a + f + r → Firefox (without firejail) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_r}}, 
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/firefox-raw >/dev/null 2>&1 &")
+}),
+    /* Mod + c + f + f -> Reset ChatGPT (reset-gpt) */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_f}, {0, XK_f}},
+    spawn, SHCMD("setsid /home/lukasz/.local/bin/reset-gpt >/dev/null 2>&1 &")
+}),
+    /* Mod + a + m + v → Mullvad (set correct binary name) */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_m}, {0, XK_m}},
+    spawn, SHCMD("setsid mullvad-browser >/dev/null 2>&1 &")
+}),
+    /* Mod + a + t → Thunderbird */
+    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_t}},
+    spawn, SHCMD("setsid thunderbird >/dev/null 2>&1 &")
+}),
+    /* Mod + a + o → Obsidian */
+    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_o}},
+    spawn, SHCMD("setsid obsidian >/dev/null 2>&1 &")
+}),
+
+    &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
+    &((Keychord){1, {{Mod1Mask, XK_s}}, spawn, SHCMD("flameshot gui") }),
+    /* Proton suite chords: MOD + a, then p + letter */
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_m}},
+        spawn, SHCMD("setsid proton-mail >/dev/null 2>&1 &") }),      
+    /* scratchpad: MOD + ` (grave) */
+    &((Keychord){1, {{MODKEY, XK_grave}},
+        togglescratch, {.v = scratchpadcmd} }),
+
+    /* sticky: mod + a + s */
+    &((Keychord){ 2, {{ MODKEY, XK_a }, { 0, XK_s }}, togglesticky, {0} }),
+
+    /* layouts */
+    &((Keychord){1, {{MODKEY, XK_m}},      setlayout,      {.v = &layouts[2]} }),
+    &((Keychord){1, {{MODKEY, XK_space}},  setlayout,      {0} }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_space}}, togglefloating, {0} }),
+
+    /* view/tag all */
+    &((Keychord){1, {{MODKEY, XK_0}},      view,           {.ui = ~0 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_0}}, tag,       {.ui = ~0 } }),
+
+    /* monitors */
+    &((Keychord){1, {{MODKEY, XK_comma}},  focusmon,       {.i = -1 } }),
+    &((Keychord){1, {{MODKEY, XK_period}}, focusmon,       {.i = +1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_comma}}, tagmon, {.i = -1 } }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_period}}, tagmon, {.i = +1 } }),
+
+
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_m}},
+        spawn, SHCMD("pamixer -t") }),           /* mute toggle */
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_j}},
+        spawn, SHCMD("pamixer -d 10") }),           
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_k}},
+        spawn, SHCMD("pamixer -i 10") }),           
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_p}},
+        spawn, SHCMD("st -e pulsemixer") }),         /* pulsemixer */
+    &((Keychord){2, {{MODKEY, XK_v}, {0, XK_t}},
+        spawn, SHCMD("media-toggle") }),           
+    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_k}, {0, XK_k}},
+        spawn, SHCMD("brightnessctl set +10%") }),   /* brighter */
+    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_j}, {0, XK_j}},
+        spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
+
+/* Mod + c + r + v -> rofi vim power */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_v}},
+    spawn, SHCMD("rofi-vim-power")
+}),
+/* Mod + c + r + v -> rofi notmuch */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_n}},
+    spawn, SHCMD("rofi-notmuch")
+}),
+
+/* Mod + c + r + v -> rofi naming conventions*/
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_t}},
+    spawn, SHCMD("rofi-task-names")
+}),
+/* Mod + c + q + q -> shutdown */
+&((Keychord){3, {{MODKEY, XK_c}, { ShiftMask, XK_q }, { ShiftMask, XK_q }},
+    spawn, SHCMD("systemctl poweroff")
+}),
+
+/* Mod + c + p + p -> passmenu */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_p}, {0, XK_p}},
+  spawn, SHCMD("passmenu")
+}),
+	/* Mod + c + p + o -> passmenu-otp */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_o}, {0, XK_o}},
+  spawn, SHCMD("passmenu-otp")
+}),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_k }},
+    spawn, SHCMD("setsid citekey-menu >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_c }},
+    spawn, SHCMD("setsid dmenu-edit-config >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_n }},
+    spawn, SHCMD("setsid capture-clip >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_n }},
+    spawn, SHCMD("setsid st -e vim ~/.clips >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_m }},
+    spawn, SHCMD("setsid dmenu-memo >/dev/null 2>&1 &") }),
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_m }},
+    spawn, SHCMD("setsid st -e vim ~/.notes  >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_v }},
+    spawn, SHCMD("setsid dmenu-vimwiki-open >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_b }},
+    spawn, SHCMD("setsid typebookmarks >/dev/null 2>&1 &") }),
+
+/* bookmarks: MOD + c, then Shift+b (add/bookmark) */
+&((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_b }},
+    spawn, SHCMD("setsid bookmarkthis >/dev/null 2>&1 &") }),
+    /* layouts on Alt+1..8 */
+    &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
+    &((Keychord){1, {{Mod1Mask, XK_2}},    setlayout,      {.v = &layouts[1]} }),  /* monocle     */
+    &((Keychord){1, {{Mod1Mask, XK_3}},    setlayout,      {.v = &layouts[5]} }),  /* bstack      */
+    &((Keychord){1, {{Mod1Mask, XK_4}},    setlayout,      {.v = &layouts[8]} }),  /* nrowgrid    */
+    &((Keychord){1, {{Mod1Mask, XK_5}},    setlayout,      {.v = &layouts[10]} }), /* gaplessgrid */
+    &((Keychord){1, {{Mod1Mask, XK_6}},    setlayout,      {.v = &layouts[11]} }), /* centeredmaster */
+    &((Keychord){1, {{Mod1Mask, XK_7}},    setlayout,      {.v = &layouts[3]} }),  /* dwindle     */
+    &((Keychord){1, {{Mod1Mask, XK_8}},    setlayout,      {.v = &layouts[9]} }),  /* horizgrid   */
+
+    /* tags (from TAGKEYS macro – already keychord-aware) */
+    TAGKEYS( XK_1, 0)
+    TAGKEYS( XK_2, 1)
+    TAGKEYS( XK_3, 2)
+    TAGKEYS( XK_4, 3)
+    TAGKEYS( XK_5, 4)
+    TAGKEYS( XK_6, 5)
+    TAGKEYS( XK_7, 6)
+    TAGKEYS( XK_8, 7)
+    TAGKEYS( XK_9, 8)
+
+    /* quit */
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_q}}, quit, {0} }),
+    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_l}, {0, XK_o}},
+    spawn, SHCMD("slock &") }),
 };
 
 /* button definitions */
@@ -159,4 +280,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
