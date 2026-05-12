@@ -27,7 +27,6 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "firefox-esr",   NULL,  NULL,       1 << 0,       0,           -1 },
-	{ "Protonvpn-app", NULL,  NULL,       1 << 8,       1,            1 },
 };
 
 /* layout(s) */
@@ -114,28 +113,21 @@ static Keychord *keychords[] = {
     /* application launchers – single key */
     /* application launchers */
 
-    /* Mod + a + f + f → Firefox ESR (with firejail) */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_f}, {0, XK_f}}, 
     spawn, SHCMD("setsid firefox-esr >/dev/null 2>&1 &")
 }),
-    /* Mod + a + m + v → Mullvad (set correct binary name) */
     &((Keychord){3, {{MODKEY, XK_a}, {0, XK_m}, {0, XK_m}},
     spawn, SHCMD("setsid mullvad-browser >/dev/null 2>&1 &")
 }),
-    /* Mod + a + t → Thunderbird */
     &((Keychord){2, {{MODKEY, XK_a}, {0, XK_t}},
     spawn, SHCMD("setsid thunderbird >/dev/null 2>&1 &")
 }),
-    /* Mod + a + o → Obsidian */
-    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_o}},
-    spawn, SHCMD("setsid obsidian >/dev/null 2>&1 &")
+    &((Keychord){2, {{MODKEY, XK_a}, {0, XK_d}},
+    spawn, SHCMD("setsid dino >/dev/null 2>&1 &")
 }),
 
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     &((Keychord){1, {{Mod1Mask, XK_s}}, spawn, SHCMD("flameshot gui") }),
-    /* Proton suite chords: MOD + a, then p + letter */
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_p}, {0, XK_m}},
-        spawn, SHCMD("setsid proton-mail >/dev/null 2>&1 &") }),      
     /* scratchpad: MOD + ` (grave) */
     &((Keychord){1, {{MODKEY, XK_grave}},
         togglescratch, {.v = scratchpadcmd} }),
@@ -169,23 +161,14 @@ static Keychord *keychords[] = {
         spawn, SHCMD("st -e pulsemixer") }),         /* pulsemixer */
     &((Keychord){2, {{MODKEY, XK_v}, {0, XK_t}},
         spawn, SHCMD("media-toggle") }),           
-    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_k}, {0, XK_k}},
+    &((Keychord){2, {{MODKEY, XK_b}, {0, XK_k}},
         spawn, SHCMD("brightnessctl set +10%") }),   /* brighter */
-    &((Keychord){3, {{MODKEY, XK_b}, {0, XK_j}, {0, XK_j}},
+    &((Keychord){2, {{MODKEY, XK_b}, {0, XK_j}},
         spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
 
-/* Mod + c + r + v -> rofi vim power */
-&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_v}},
-    spawn, SHCMD("rofi-vim-power")
-}),
-/* Mod + c + r + v -> rofi notmuch */
-&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_n}},
-    spawn, SHCMD("rofi-notmuch")
-}),
-
 /* Mod + c + r + v -> rofi naming conventions*/
-&((Keychord){3, {{MODKEY, XK_c}, {0, XK_r}, {0, XK_t}},
-    spawn, SHCMD("rofi-task-names")
+&((Keychord){2, {{MODKEY, XK_c}, {0, XK_r}},
+    spawn, SHCMD("rofi-cheat")
 }),
 /* Mod + c + q + q -> shutdown */
 &((Keychord){3, {{MODKEY, XK_c}, { ShiftMask, XK_q }, { ShiftMask, XK_q }},
@@ -196,35 +179,55 @@ static Keychord *keychords[] = {
 &((Keychord){3, {{MODKEY, XK_c}, {0, XK_p}, {0, XK_p}},
   spawn, SHCMD("passmenu")
 }),
-	/* Mod + c + p + o -> passmenu-otp */
+	/* Mod + c + o + o -> passmenu-otp */
 &((Keychord){3, {{MODKEY, XK_c}, {0, XK_o}, {0, XK_o}},
   spawn, SHCMD("passmenu-otp")
+}),
+	/* Mod + c + l + l -> passmenu-otp */
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_l}, {0, XK_l}},
+  spawn, SHCMD("clipmenu")
 }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_k }},
     spawn, SHCMD("setsid citekey-menu >/dev/null 2>&1 &") }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_c }},
-    spawn, SHCMD("setsid dmenu-edit-config >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid dm-edit-config >/dev/null 2>&1 &") }),
+
+&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_f }, { 0, XK_r }},
+    spawn, SHCMD("~/.local/bin/dm-frecent") }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_n }},
-    spawn, SHCMD("setsid capture-clip >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid clip-capture >/dev/null 2>&1 &") }),
 &((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_n }},
-    spawn, SHCMD("setsid st -e vim ~/.clips >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid st -e vim ~/docs/vimwiki/inbox/clips.md >/dev/null 2>&1 &") }),
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_m }},
-    spawn, SHCMD("setsid dmenu-memo >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid dm-memo >/dev/null 2>&1 &") }),
 &((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_m }},
-    spawn, SHCMD("setsid st -e vim ~/.notes  >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid st -e vim ~/docs/vimwiki/inbox/memo.md  >/dev/null 2>&1 &") }),
 
-&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_v }},
-    spawn, SHCMD("setsid dmenu-vimwiki-open >/dev/null 2>&1 &") }),
+&((Keychord){ 3, {{ MODKEY, XK_c }, {0, XK_v}, { 0, XK_o }},
+    spawn, SHCMD("setsid dm-vimwiki-open >/dev/null 2>&1 &") }),
+&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_v }, { 0, XK_s }},
+    spawn, SHCMD("st -e ~/.local/bin/wiki-search") }),
 
 &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_b }},
-    spawn, SHCMD("setsid typebookmarks >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid bookmark-type >/dev/null 2>&1 &") }),
 
 /* bookmarks: MOD + c, then Shift+b (add/bookmark) */
 &((Keychord){ 2, {{ MODKEY, XK_c }, { ShiftMask, XK_b }},
-    spawn, SHCMD("setsid bookmarkthis >/dev/null 2>&1 &") }),
+    spawn, SHCMD("setsid bookmark-clip >/dev/null 2>&1 &") }),
+
+&((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_h }},
+    spawn, SHCMD("hledger-category-select") }),
+
+&((Keychord){3, {{MODKEY, XK_c}, {0, XK_s}, {0, XK_f}},
+  spawn, SHCMD("st -e ~/.sfeed/sfeed.sh")
+}),
+
+&((Keychord){1, {{Mod1Mask, XK_o}},
+    spawn, SHCMD("opener")
+}),
     /* layouts on Alt+1..8 */
     &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
     &((Keychord){1, {{Mod1Mask, XK_2}},    setlayout,      {.v = &layouts[1]} }),  /* monocle     */
@@ -248,7 +251,7 @@ static Keychord *keychords[] = {
 
     /* quit */
     &((Keychord){1, {{MODKEY|ShiftMask, XK_q}}, quit, {0} }),
-    &((Keychord){3, {{MODKEY, XK_a}, {0, XK_l}, {0, XK_o}},
+    &((Keychord){3, {{MODKEY, XK_c}, {0, XK_l}, {0, XK_o}},
     spawn, SHCMD("slock &") }),
 };
 
