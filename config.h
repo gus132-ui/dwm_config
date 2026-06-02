@@ -3,6 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;
 static const unsigned int snap      = 32;
+static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;
 static const int topbar             = 1;
 static const char *fonts[]          = { "Hack Nerd Font:size=10" };
@@ -25,8 +26,9 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "firefox-esr",   NULL,  NULL,       1 << 0,       0,           -1 },
+	/* class    instance  title  tags mask  isfloating  isterminal  noswallow  monitor */
+{ "st-256color",     NULL,     NULL,  0,         0,          1,          0,         -1 },
+
 };
 
 /* layout(s) */
@@ -76,6 +78,7 @@ static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
 static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
+static const char *surflaunch[] = { "surf-launch", NULL };
 
 static Keychord *keychords[] = {
     /* modifier / key / function / argument */
@@ -133,7 +136,7 @@ static Keychord *keychords[] = {
         togglescratch, {.v = scratchpadcmd} }),
 
     /* sticky: mod + a + s */
-    &((Keychord){ 2, {{ MODKEY, XK_a }, { 0, XK_s }}, togglesticky, {0} }),
+    &((Keychord){ 2, {{ MODKEY, XK_c }, { 0, XK_s }}, togglesticky, {0} }),
 
     /* layouts */
     &((Keychord){1, {{MODKEY, XK_m}},      setlayout,      {.v = &layouts[2]} }),
@@ -172,7 +175,7 @@ static Keychord *keychords[] = {
 }),
 /* Mod + c + q + q -> shutdown */
 &((Keychord){3, {{MODKEY, XK_c}, { ShiftMask, XK_q }, { ShiftMask, XK_q }},
-    spawn, SHCMD("systemctl poweroff")
+    spawn, SHCMD("loginctl poweroff")
 }),
 
 /* Mod + c + p + p -> passmenu */
@@ -227,6 +230,15 @@ static Keychord *keychords[] = {
 
 &((Keychord){1, {{Mod1Mask, XK_o}},
     spawn, SHCMD("opener")
+}),
+&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_v }, { 0, XK_Return }},
+    spawn, SHCMD("setsid vps-term >/dev/null 2>&1 &")
+}),
+&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_s }, { 0, XK_Return }},
+    spawn, SHCMD("setsid sanctum-term >/dev/null 2>&1 &")
+}),	
+&((Keychord){2, {{MODKEY, XK_a}, {0, XK_s}},
+  spawn, SHCMD("surf-launch")
 }),
     /* layouts on Alt+1..8 */
     &((Keychord){1, {{Mod1Mask, XK_1}},    setlayout,      {.v = &layouts[0]} }),  /* tile        */
