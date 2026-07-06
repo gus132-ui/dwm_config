@@ -169,6 +169,14 @@ static Keychord *keychords[] = {
     &((Keychord){2, {{MODKEY, XK_b}, {0, XK_j}},
         spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
 
+    /* Keychron Fn-layer spares; F15-F24 keysyms named via xmodmap in .xinitrc.
+       F20 = ex-Cortana key (right of PrtSc); Fn+1..4 = F21..F24;
+       Fn+5..9 = F15..F19 and F21 (Fn+1) unbound. */
+    &((Keychord){1, {{0, XK_F20}}, spawn, SHCMD("slock") }),                  /* ex-Cortana: lock */
+    &((Keychord){1, {{0, XK_F22}}, spawn, SHCMD("sink-cycle") }),             /* Fn+2 audio output */
+    &((Keychord){1, {{0, XK_F23}}, spawn, SHCMD("dunstctl history-pop") }),   /* Fn+3 notif history */
+    &((Keychord){1, {{0, XK_F24}}, spawn, SHCMD("st -e pulsemixer") }),       /* Fn+4 mixer */
+
 /* Mod + c + r + v -> rofi naming conventions*/
 &((Keychord){2, {{MODKEY, XK_c}, {0, XK_r}},
     spawn, SHCMD("rofi-cheat")
@@ -234,7 +242,7 @@ static Keychord *keychords[] = {
 &((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_v }, { 0, XK_Return }},
     spawn, SHCMD("setsid vps-term >/dev/null 2>&1 &")
 }),
-&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_s }, { 0, XK_Return }},
+&((Keychord){ 3, {{ MODKEY, XK_c }, { 0, XK_t }, { 0, XK_Return }},
     spawn, SHCMD("setsid sanctum-term >/dev/null 2>&1 &")
 }),	
 &((Keychord){2, {{MODKEY, XK_a}, {0, XK_s}},
