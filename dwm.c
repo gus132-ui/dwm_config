@@ -308,10 +308,10 @@ static Monitor *mons, *selmon;
 static Window root, wmcheckwin;
 static xcb_connection_t *xcon;
 unsigned int currentkey = 0;
-static const unsigned int gappih = 20;
-static const unsigned int gappiv = 10;
-static const unsigned int gappoh = 10;
-static const unsigned int gappov = 30;
+static const unsigned int gappih = 0;
+static const unsigned int gappiv = 0;
+static const unsigned int gappoh = 0;
+static const unsigned int gappov = 0;
 static       int smartgaps       = 0;
 #define FORCE_VSPLIT 1
 /* configuration, allows nested code to access above variables */

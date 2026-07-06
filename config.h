@@ -6,16 +6,19 @@ static const unsigned int snap      = 32;
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;
 static const int topbar             = 1;
-static const char *fonts[]          = { "Hack Nerd Font:size=10" };
-static const char dmenufont[]       = "Hack Nerd Font:size=10";
-static const char col_bg[]          = "#1d2021";
-static const char col_fg[]          = "#ebdbb2";
-static const char col_fg_dim[]      = "#a88984";
-static const char col_accent[]      = "#d79921";
+static const char *fonts[]          = { "fixed:pixelsize=13:antialias=false" };
+static const char dmenufont[]       = "fixed:pixelsize=13:antialias=false";
+/* wmii classic palette */
+static const char col_norm_fg[]     = "#000000";
+static const char col_norm_bg[]     = "#e8e8d8";
+static const char col_norm_bd[]     = "#9c9c7a";
+static const char col_sel_fg[]      = "#000000";
+static const char col_sel_bg[]      = "#c1c48b";
+static const char col_sel_bd[]      = "#81654f";
 static const char *colors[][3]      = {
-        /*               fg           bg      border   */
-        [SchemeNorm] = { col_fg_dim,  col_bg, col_bg    },
-        [SchemeSel]  = { col_accent,  col_bg, col_accent },
+        /*               fg           bg           border   */
+        [SchemeNorm] = { col_norm_fg, col_norm_bg, col_norm_bd },
+        [SchemeSel]  = { col_sel_fg,  col_sel_bg,  col_sel_bd  },
 };
 
 /* tagging */
@@ -72,7 +75,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bg, "-nf", col_fg, "-sb", col_accent, "-sf", col_bg, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_norm_bg, "-nf", col_norm_fg, "-sb", col_sel_bg, "-sf", col_sel_fg, NULL };
 static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
