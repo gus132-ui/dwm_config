@@ -79,7 +79,7 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
-static const char *rofi[] = {"rofi", "-show", "drun", "-theme", "/home/lukasz/.config/rofi/gruvbox-dwm.rasi", NULL };
+static const char *rofi[] = {"rofi", "-show", "drun", NULL }; /* theme comes from ~/.config/rofi/config.rasi */
 static const char *vimwikicmd[] = { "st", "-e", "vim", "+VimwikiIndex", NULL };
 static const char *surflaunch[] = { "surf-launch", NULL };
 
