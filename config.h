@@ -6,15 +6,17 @@ static const unsigned int snap      = 32;
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;
 static const int topbar             = 1;
-static const char *fonts[]          = { "fixed:pixelsize=13:antialias=false" };
-static const char dmenufont[]       = "fixed:pixelsize=13:antialias=false";
-/* wmii classic palette */
-static const char col_norm_fg[]     = "#000000";
-static const char col_norm_bg[]     = "#e8e8d8";
-static const char col_norm_bd[]     = "#9c9c7a";
-static const char col_sel_fg[]      = "#000000";
-static const char col_sel_bg[]      = "#c1c48b";
-static const char col_sel_bd[]      = "#81654f";
+#include <X11/XF86keysym.h>
+
+static const char *fonts[]          = { "Terminus:pixelsize=16:antialias=false" };
+static const char dmenufont[]       = "Terminus:pixelsize=16:antialias=false";
+/* Transfiguration icon palette — parchment/gold, sampled from the icon */
+static const char col_norm_fg[]     = "#e6dec6";
+static const char col_norm_bg[]     = "#262e28";
+static const char col_norm_bd[]     = "#3a453c";
+static const char col_sel_fg[]      = "#eae0c8";
+static const char col_sel_bg[]      = "#6e7d54";
+static const char col_sel_bd[]      = "#97ad6e";
 static const char *colors[][3]      = {
         /*               fg           bg           border   */
         [SchemeNorm] = { col_norm_fg, col_norm_bg, col_norm_bd },
@@ -133,6 +135,7 @@ static Keychord *keychords[] = {
 }),
 
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
+    &((Keychord){1, {{0, XK_Print}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     &((Keychord){1, {{Mod1Mask, XK_s}}, spawn, SHCMD("flameshot gui") }),
     /* scratchpad: MOD + ` (grave) */
     &((Keychord){1, {{MODKEY, XK_grave}},
@@ -172,13 +175,25 @@ static Keychord *keychords[] = {
     &((Keychord){2, {{MODKEY, XK_b}, {0, XK_j}},
         spawn, SHCMD("brightnessctl set 10%-") }),   /* dimmer */
 
-    /* Keychron Fn-layer spares; F15-F24 keysyms named via xmodmap in .xinitrc.
+    /* Keychron Fn-layer spares; F13-F24 keysyms named via xmodmap in .xinitrc.
        F20 = ex-Cortana key (right of PrtSc); Fn+1..4 = F21..F24;
-       Fn+5..9 = F15..F19 and F21 (Fn+1) unbound. */
+       Fn+5..9 = F15..F19 and F21 (Fn+1) unbound.
+       F-row (Launcher-mapped): Fn+F3 = F13, Fn+F5 = F14. */
+    &((Keychord){1, {{0, XK_F13}}, spawn, SHCMD("$HOME/.local/bin/dfm-drag") }), /* Fn+F3 pick file + drag */
+    &((Keychord){1, {{0, XK_F14}}, spawn, SHCMD("st -e vifm") }),             /* Fn+F4 file manager */
     &((Keychord){1, {{0, XK_F20}}, spawn, SHCMD("slock") }),                  /* ex-Cortana: lock */
-    &((Keychord){1, {{0, XK_F22}}, spawn, SHCMD("sink-cycle") }),             /* Fn+2 audio output */
-    &((Keychord){1, {{0, XK_F23}}, spawn, SHCMD("dunstctl history-pop") }),   /* Fn+3 notif history */
-    &((Keychord){1, {{0, XK_F24}}, spawn, SHCMD("st -e pulsemixer") }),       /* Fn+4 mixer */
+    &((Keychord){1, {{0, XK_F21}}, spawn, SHCMD("st -e pulsemixer") }),       /* Fn+1 mixer */
+
+    /* media keys (Keychron Fn+F8/F10/F11/F12) — Mod+v chords kept as well.
+       Prev/Next + brightness fire once Launcher maps Fn+F7/F9 and Fn+F1/F2. */
+    &((Keychord){1, {{0, XF86XK_AudioPlay}},        spawn, SHCMD("media-toggle") }),
+    &((Keychord){1, {{0, XF86XK_AudioMute}},        spawn, SHCMD("pamixer -t") }),
+    &((Keychord){1, {{0, XF86XK_AudioLowerVolume}}, spawn, SHCMD("pamixer -d 10") }),
+    &((Keychord){1, {{0, XF86XK_AudioRaiseVolume}}, spawn, SHCMD("pamixer -i 10") }),
+    &((Keychord){1, {{0, XF86XK_AudioPrev}},        spawn, SHCMD("media-prev") }),
+    &((Keychord){1, {{0, XF86XK_AudioNext}},        spawn, SHCMD("media-next") }),
+    &((Keychord){1, {{0, XF86XK_MonBrightnessDown}}, spawn, SHCMD("brightnessctl set 10%-") }), /* Fn+F1 */
+    &((Keychord){1, {{0, XF86XK_MonBrightnessUp}},   spawn, SHCMD("brightnessctl set +10%") }), /* Fn+F2 */
 
 /* Mod + c + r + v -> rofi naming conventions*/
 &((Keychord){2, {{MODKEY, XK_c}, {0, XK_r}},
