@@ -1184,9 +1184,16 @@ keypress(XEvent *e)
             if(w == 0 || ran == 1)
                     break;
             grabkeys();
-            while (running && !XNextEvent(dpy, &event) && !ran)
-                    if(event.type == KeyPress)
+            /* Events arriving mid-chord must be dispatched, not dropped:
+             * discarding a ButtonPress that activated the GrabModeSync grab
+             * from grabbuttons() freezes pointer and keyboard permanently,
+             * since only buttonpress()'s XAllowEvents can release it. */
+            while (running && !XNextEvent(dpy, &event)) {
+                    if (event.type == KeyPress)
                             break;
+                    if (handler[event.type])
+                            handler[event.type](&event); /* call handler */
+            }
             r = w;
             Keychord **holder = rpointer;
             rpointer = wpointer;
