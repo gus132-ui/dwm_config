@@ -7,23 +7,11 @@ static const unsigned int snap      = 32;
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;
 static const int topbar             = 1;
-static const char *fonts[]          = { "Terminus:pixelsize=16:antialias=false" };
-/* Transfiguration palette -- slots match ~/git/st/config.def.h colorname[].
- * dmenu's own colors/font are NOT here; they live in ~/.local/bin/dmenu. */
-static const char col_bg[]          = "#262e28"; /* st 257: default bg (dark hills) */
-static const char col_fg[]          = "#e6dec6"; /* st 256: bar text, 10.4:1 on bg  */
-static const char col_sel_fg[]      = "#f0e9d8"; /* st 15:  title + selected tag    */
-static const char col_accent[]      = "#6e7d54"; /* st 2:   focused window border   */
-static const char col_olive[]       = "#4a5742"; /* muted olive: title area + chip  */
-static const char *colors[][3]      = {
-        /*               fg           bg      border   */
-        [SchemeNorm] = { col_fg,      col_bg,    col_bg     },
-        /* SchemeSel's bg is what drw_text paints across the WHOLE title width,
-         * so the olive here is both the selected-tag chip and the title area. */
-        [SchemeSel]  = { col_sel_fg,  col_olive, col_accent },
-        /* used by drawbar when a tag has no client at all */
-        [SchemeBarEmpty] = { col_fg,  col_olive, col_olive  },
-};
+/* Colours and bar font: GENERATED, do not edit here.
+ *   ~/git/transfiguration-themes: ./install.sh dwm <scheme>
+ * then rebuild. Defines fonts[], the col_* strings and colors[][3].
+ * dmenu is themed separately by ~/.local/bin/dmenu (./install.sh dmenu). */
+#include "colors.h"
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
