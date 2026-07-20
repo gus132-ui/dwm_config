@@ -11,15 +11,18 @@ static const char *fonts[]          = { "Terminus:pixelsize=16:antialias=false" 
 /* Transfiguration palette -- slots match ~/git/st/config.def.h colorname[].
  * dmenu's own colors/font are NOT here; they live in ~/.local/bin/dmenu. */
 static const char col_bg[]          = "#262e28"; /* st 257: default bg (dark hills) */
-static const char col_fg_dim[]      = "#6b6b5c"; /* st 8:   bright black            */
-static const char col_accent[]      = "#6e7d54"; /* st 2:   green (olive robe)      */
-static const char col_bar_empty[]   = "#4a5742"; /* muted olive: idle title area    */
+static const char col_fg[]          = "#e6dec6"; /* st 256: bar text, 10.4:1 on bg  */
+static const char col_sel_fg[]      = "#f0e9d8"; /* st 15:  title + selected tag    */
+static const char col_accent[]      = "#6e7d54"; /* st 2:   focused window border   */
+static const char col_olive[]       = "#4a5742"; /* muted olive: title area + chip  */
 static const char *colors[][3]      = {
         /*               fg           bg      border   */
-        [SchemeNorm] = { col_fg_dim,  col_bg, col_bg    },
-        [SchemeSel]  = { col_accent,  col_bg, col_accent },
-        /* bg is what drawbar fills the idle title area with (drw_rect invert) */
-        [SchemeBarEmpty] = { col_fg_dim, col_bar_empty, col_bar_empty },
+        [SchemeNorm] = { col_fg,      col_bg,    col_bg     },
+        /* SchemeSel's bg is what drw_text paints across the WHOLE title width,
+         * so the olive here is both the selected-tag chip and the title area. */
+        [SchemeSel]  = { col_sel_fg,  col_olive, col_accent },
+        /* used by drawbar when a tag has no client at all */
+        [SchemeBarEmpty] = { col_fg,  col_olive, col_olive  },
 };
 
 /* tagging */
