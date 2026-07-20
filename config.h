@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h>	/* XF86XK_* media/brightness keysyms */
 
 /* appearance */
 static const unsigned int borderpx  = 2;
@@ -6,16 +7,19 @@ static const unsigned int snap      = 32;
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const int showbar            = 1;
 static const int topbar             = 1;
-static const char *fonts[]          = { "Hack Nerd Font:size=10" };
-static const char dmenufont[]       = "Hack Nerd Font:size=10";
-static const char col_bg[]          = "#1d2021";
-static const char col_fg[]          = "#ebdbb2";
-static const char col_fg_dim[]      = "#a88984";
-static const char col_accent[]      = "#d79921";
+static const char *fonts[]          = { "Terminus:pixelsize=16:antialias=false" };
+/* Transfiguration palette -- slots match ~/git/st/config.def.h colorname[].
+ * dmenu's own colors/font are NOT here; they live in ~/.local/bin/dmenu. */
+static const char col_bg[]          = "#262e28"; /* st 257: default bg (dark hills) */
+static const char col_fg_dim[]      = "#6b6b5c"; /* st 8:   bright black            */
+static const char col_accent[]      = "#6e7d54"; /* st 2:   green (olive robe)      */
+static const char col_bar_empty[]   = "#4a5742"; /* muted olive: idle title area    */
 static const char *colors[][3]      = {
         /*               fg           bg      border   */
         [SchemeNorm] = { col_fg_dim,  col_bg, col_bg    },
         [SchemeSel]  = { col_accent,  col_bg, col_accent },
+        /* bg is what drawbar fills the idle title area with (drw_rect invert) */
+        [SchemeBarEmpty] = { col_fg_dim, col_bar_empty, col_bar_empty },
 };
 
 /* tagging */
@@ -72,7 +76,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_bg, "-nf", col_fg, "-sb", col_accent, "-sf", col_bg, NULL };
+/* Colors/font deliberately omitted: ~/.local/bin/dmenu (PATH-shadowing wrapper)
+ * supplies the Transfiguration theme. Passing them here would override it,
+ * since dmenu keeps the LAST value parsed per flag. Retheme dmenu there. */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]  = {"sh", "-lc", "cd \"$HOME\" && exec st", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
@@ -131,6 +138,7 @@ static Keychord *keychords[] = {
 
     &((Keychord){1, {{MODKEY, XK_s}},      spawn,          SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }),
     &((Keychord){1, {{Mod1Mask, XK_s}}, spawn, SHCMD("flameshot gui") }),
+    &((Keychord){1, {{0, XK_Print}}, spawn, SHCMD("flameshot gui -r | xclip -selection clipboard -t image/png") }), /* as on `retro` */
     /* scratchpad: MOD + ` (grave) */
     &((Keychord){1, {{MODKEY, XK_grave}},
         togglescratch, {.v = scratchpadcmd} }),
@@ -176,6 +184,20 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{0, XK_F22}}, spawn, SHCMD("sink-cycle") }),             /* Fn+2 audio output */
     &((Keychord){1, {{0, XK_F23}}, spawn, SHCMD("dunstctl history-pop") }),   /* Fn+3 notif history */
     &((Keychord){1, {{0, XK_F24}}, spawn, SHCMD("st -e pulsemixer") }),       /* Fn+4 mixer */
+
+    /* Restored from the `retro` branch, which the 6.8 migration left behind.
+     * Laptop Fn layer emits F13/F14; media + brightness keys emit XF86XK_*. */
+    &((Keychord){1, {{0, XK_F13}}, spawn, SHCMD("$HOME/.local/bin/dfm-drag") }), /* Fn+F3 pick file + drag */
+    &((Keychord){1, {{0, XK_F14}}, spawn, SHCMD("st -e vifm") }),             /* Fn+F4 file manager */
+    &((Keychord){1, {{0, XK_F21}}, spawn, SHCMD("st -e pulsemixer") }),       /* mixer (Keychron) */
+    &((Keychord){1, {{0, XF86XK_AudioMute}},         spawn, SHCMD("pamixer -t") }),
+    &((Keychord){1, {{0, XF86XK_AudioRaiseVolume}},  spawn, SHCMD("pamixer -i 10") }),
+    &((Keychord){1, {{0, XF86XK_AudioLowerVolume}},  spawn, SHCMD("pamixer -d 10") }),
+    &((Keychord){1, {{0, XF86XK_AudioPlay}},         spawn, SHCMD("media-toggle") }),
+    &((Keychord){1, {{0, XF86XK_AudioNext}},         spawn, SHCMD("media-next") }),
+    &((Keychord){1, {{0, XF86XK_AudioPrev}},         spawn, SHCMD("media-prev") }),
+    &((Keychord){1, {{0, XF86XK_MonBrightnessUp}},   spawn, SHCMD("brightnessctl set +10%") }),
+    &((Keychord){1, {{0, XF86XK_MonBrightnessDown}}, spawn, SHCMD("brightnessctl set 10%-") }),
 
 /* Mod + c + r + v -> rofi naming conventions*/
 &((Keychord){2, {{MODKEY, XK_c}, {0, XK_r}},
